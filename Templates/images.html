@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}My Images{% endblock %}
+
+{% block content %}
+    {%  if request.session.is_login %}
+        {% if message %}
+            <div class = alert-warning">{{ message }}</div>
+        {% endif %}
+
+        {% for item in imgs %}
+            {{ item.img_name }}
+            <img src="{{ item.img_url.url }}">
+            <a href="{% url 'deleteImg' item.id %}">delete</a>
+            <a href="{% url 'downloadImg' item.id %}" target="_blank">download</a>
+        {% endfor %}
+        <form method = "POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <input type="file" name="img">
+            <button type="submit">submit</button>
+            <input type="hidden" value="{{ request.session.user_name }}" name="currentuser">
+        </form>
+    {% else %}
+        <h1>please login</h1>
+    {% endif %}
+
+
+
+{% endblock %}
